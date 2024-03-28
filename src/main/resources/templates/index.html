@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Halloween Candy Consumption</title>
+    <link rel="stylesheet" href="/css/mystyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Halloween Candy Consumption</h1>
+        <table>
+            <tr>
+                <th>Quantity</th>
+                <th>Candy Brand Name</th>
+                <th>Before Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tr th:each="h: ${halloweenCandyConsumptionList}">
+                <td th:text="${h.quantity}"></td>
+                <td th:text="${h.candyBrandname}"></td>
+                <td th:text="${h.beforeDate}"></td>
+                <td th:text="${h.description}"></td>
+                <td th:text="${h.category}"></td>
+                <td><a th:href="@{/editHalloweenCandyConsumptionById/{id}(id=${h.id})}">Edit</a></td>
+                <td><a th:href="@{/deleteHalloweenCandyConsumptionById/{id}(id=${h.id})}">Delete</a></td>
+            </tr>
+        </table>
+        <hr>
+        <form method="post" action="#" th:action="@{/insertHalloweenCandyConsumption}" th:object="${halloweenCandyConsumption}" onsubmit="validateForm(event);">
+            Quantity: <input type="text" id="quantity" name="quantity" th:field="*{quantity}" /><br><br>
+            Candy Brand Name: <input type="text" id="candyBrandname" name="candyBrandname" th:field="*{candyBrandname}" /><br><br>
+            Before Date: <input type="date" id="beforeDate" name="beforeDate" th:field="*{beforeDate}" /><br><br>
+            Description: <input type="text" id="description" name="description" th:field="*{description}" /><br><br>
+            Category:
+            <select th:field="*{category}">
+                <option th:each="s : ${halloweenCandyConsumption.HALLOWEENCATEGORIES}" th:value="${s}" th:text="${s}" />
+            </select><br><br>
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            var quantityInput = document.getElementById("quantity").value;
+            var descriptionInput = document.getElementById("description").value;
+            var candyBrandnameInput = document.getElementById("candyBrandname").value;
+            var beforeDateInput = document.getElementById("beforeDate").value;
+
+            // Validate Quantity (only numbers)
+            if (!(/^\d+$/.test(quantityInput))) {
+                alert("Quantity must be a number.");
+                event.preventDefault(); // Prevent form submission
+                return false;
+            }
+
+            // Validate Description (not empty)
+            if (!descriptionInput.trim()) {
+                alert("Description cannot be empty.");
+                event.preventDefault(); // Prevent form submission
+                return false;
+            }
+
+            // Validate Candy Brand Name (not empty)
+            if (!candyBrandnameInput.trim()) {
+                alert("Candy Brand Name cannot be empty.");
+                event.preventDefault(); // Prevent form submission
+                return false;
+            }
+
+            // Validate Before Date (not empty)
+            if (!beforeDateInput.trim()) {
+                alert("Before Date cannot be empty.");
+                event.preventDefault(); // Prevent form submission
+                return false;
+            }
+
+            // Form is valid, allow form submission
+            return true;
+        }
+    </script>
+</body>
+</html>
